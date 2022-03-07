@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.IO;
 using System.Threading.Tasks;
+using static GitHubMonitorApp.GitHubBody;
 
 namespace GitHubMonitorApp
 {
@@ -20,11 +21,11 @@ namespace GitHubMonitorApp
             log.LogInformation("Out GitHub Monitor Processed an action");
 
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            dynamic data = JsonConvert.DeserializeObject(requestBody);
+            var data = JsonConvert.DeserializeObject<Rootobject>(requestBody);
 
             log.LogInformation(requestBody);
 
-            return new OkResult();
+            return new OkObjectResult(new { data.pusher.name, data.pusher.email });
         }
     }
 }
